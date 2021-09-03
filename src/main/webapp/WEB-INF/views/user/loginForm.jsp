@@ -11,7 +11,7 @@
 	  <div class="form-group">
 	    <input type="password" name="password" class="form-control" placeholder="Enter password" >
 	  </div>
-	  <button type="submit" class="btn btn-primary">Submit</button>
+	  <button type="submit" class="btn btn-primary">로그인</button>
 	</form>
 </div>
 
