@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.cos.blogapp.domain.user.User;
 import com.cos.blogapp.domain.user.UserRepository;
+import com.cos.blogapp.web.dto.JoinReqDto;
 import com.cos.blogapp.web.dto.LoginReqDto;
 
 @Controller
@@ -65,6 +66,13 @@ public class UserController {
 		// 5. 메인페이지를 돌려주기
 		return "home";
 	}
+	
+	@PostMapping("/join")
+	public String join(JoinReqDto dto) { // username=love&password=1234&email=love@nate.com
+		userRepository.save(dto.toEntity());
+		return "redirect:/loginForm"; // 리다이렉션 (300)
+	}
+	
 }
 
 

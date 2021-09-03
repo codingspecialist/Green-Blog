@@ -1,5 +1,7 @@
 package com.cos.blogapp.domain.user;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
