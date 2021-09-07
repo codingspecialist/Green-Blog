@@ -43,7 +43,18 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public String login(LoginReqDto dto) {
+	public String login(@Valid LoginReqDto dto, BindingResult bindingResult, Model model) {
+		
+		if(bindingResult.hasErrors()) {
+			Map<String, String> errorMap = new HashMap<>();
+			for(FieldError error : bindingResult.getFieldErrors()) {
+				errorMap.put(error.getField(), error.getDefaultMessage());
+				System.out.println("필드 : "+error.getField());
+				System.out.println("메시지 : "+error.getDefaultMessage());
+			}
+			model.addAttribute("errorMap", errorMap);
+			return "error/error";
+		}
 		
 		// 1. username, password 받기
 		System.out.println(dto.getUsername());
