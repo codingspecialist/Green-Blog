@@ -45,7 +45,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public String login(@Valid LoginReqDto dto, BindingResult bindingResult, Model model) {
+	public @ResponseBody String login(@Valid LoginReqDto dto, BindingResult bindingResult, Model model) {
 		
 		if(bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
@@ -55,21 +55,16 @@ public class UserController {
 				System.out.println("메시지 : "+error.getDefaultMessage());
 			}
 			model.addAttribute("errorMap", errorMap);
-			return "error/error";
+			return Script.back(errorMap.toString());
 		}
 		
-		// 1. username, password 받기
-		System.out.println(dto.getUsername());
-		System.out.println(dto.getPassword());
-		// 2. DB -> 조회
 		User userEntity =  userRepository.mLogin(dto.getUsername(), dto.getPassword());
 		
-		if(userEntity == null) {
-			return "redirect:/loginForm";
+		if(userEntity == null) { // username, password 잘못 기입
+			return Script.back("아이디 혹은 비밀번호를 잘못 입력하였습니다.");
 		}else {
-			
 			session.setAttribute("principal", userEntity);
-			return "redirect:/";
+			return Script.href("/", "로그인 성공");
 		}
 	}
 	
@@ -91,7 +86,6 @@ public class UserController {
 			model.addAttribute("errorMap", errorMap);
 			return Script.back(errorMap.toString());
 		}
-		
 		
 		userRepository.save(dto.toEntity());
 		return Script.href("/loginForm"); // 리다이렉션 (300)

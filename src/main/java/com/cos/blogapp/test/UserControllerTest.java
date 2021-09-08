@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class UserControllerTest {
 
 	@GetMapping("/test/join")
-	public @ResponseBody String testJoin() {
+	public  String testJoin() {
 		return "test/join";  
 	}
 	
