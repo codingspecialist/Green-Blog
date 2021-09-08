@@ -23,6 +23,6 @@ public class User {
 	private String username; // 아이디
 	@Column(nullable = false, length = 20)
 	private String password;
-	@Column(nullable = false, length = 0)
+	@Column(nullable = false, length = 50)
 	private String email;
 }

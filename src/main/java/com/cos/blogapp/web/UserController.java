@@ -12,9 +12,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.blogapp.domain.user.User;
 import com.cos.blogapp.domain.user.UserRepository;
+import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.JoinReqDto;
 import com.cos.blogapp.web.dto.LoginReqDto;
 
@@ -67,14 +69,17 @@ public class UserController {
 		}else {
 			
 			session.setAttribute("principal", userEntity);
-			return "redirect:/home";
+			return "redirect:/";
 		}
 	}
 	
 	@PostMapping("/join")
-	public String join(@Valid JoinReqDto dto, BindingResult bindingResult, Model model) { // username=love&password=1234&email=love@nate.com
+	public @ResponseBody String join(@Valid JoinReqDto dto, BindingResult bindingResult, Model model) { // username=love&password=1234&email=love@nate.com
 		
-		System.out.println("에러사이즈 : "+bindingResult.getFieldErrors().size());
+		// 1. 유효성 검사 실패 - 자바스크립트 응답(경고창, 뒤로가기)
+		// 2. 정상 - 로그인 페이지
+		
+		//System.out.println("에러사이즈 : "+bindingResult.getFieldErrors().size());
 		
 		if(bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
@@ -84,12 +89,12 @@ public class UserController {
 				System.out.println("메시지 : "+error.getDefaultMessage());
 			}
 			model.addAttribute("errorMap", errorMap);
-			return "error/error";
+			return Script.back(errorMap.toString());
 		}
 		
 		
 		userRepository.save(dto.toEntity());
-		return "redirect:/loginForm"; // 리다이렉션 (300)
+		return Script.href("/loginForm"); // 리다이렉션 (300)
 	}
 	
 }
