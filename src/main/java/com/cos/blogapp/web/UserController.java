@@ -30,6 +30,12 @@ public class UserController {
 	private final UserRepository userRepository;
 	private final HttpSession session;
 	
+	@GetMapping("/logout")
+	public String logout() {
+		session.invalidate(); // 세션 무효화 (jsessionId에 있는 값을 비우는 것)
+		return "redirect:/"; // 게시글 목록 화면에 데이터가 있을까요?
+	}
+	
 	@GetMapping("/loginForm")
 	public String loginForm() {
 		return "user/loginForm";
