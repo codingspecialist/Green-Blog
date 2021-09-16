@@ -2,7 +2,6 @@ package com.cos.blogapp.web;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cos.blogapp.domain.board.Board;
 import com.cos.blogapp.domain.board.BoardRepository;
 import com.cos.blogapp.domain.user.User;
+import com.cos.blogapp.handler.ex.MyNotFoundException;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.BoardSaveReqDto;
 
@@ -41,14 +41,13 @@ public class BoardController {
 	@GetMapping("/board/{id}")
 	public String detail(@PathVariable int id, Model model) {
 		// select * from board where id = :id
-		
 		// 1. orElse 는 값을 찾으면 Board가 리턴, 못찾으면 (괄호안 내용 리턴)
 //		Board boardEntity =  boardRepository.findById(id)
 //				.orElse(new Board(100, "글없어요", "글없어요", null));
 		
 		// 2. orElseThrow
 		Board boardEntity =  boardRepository.findById(id)
-				.orElseThrow();
+				.orElseThrow(()-> new MyNotFoundException(id+" 못찾았어요") );
 		
 		model.addAttribute("boardEntity", boardEntity);
 		return "board/detail";
