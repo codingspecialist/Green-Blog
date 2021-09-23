@@ -4,9 +4,27 @@
 
 <div class="container">
 		<a href="#" class="btn btn-warning">수정</a>
-		<form action="#" method="post" style="display:inline-block">
-			<button id="btn-delete" class="btn btn-danger" type="submit">삭제</button>
-		</form>
+		<button class="btn btn-danger" onclick="deleteById(${boardEntity.id})">삭제</button>
+		
+		<script>
+		
+			async function deleteById(id){
+				// 1. 비동기 함수 호출 -> 비동기를 잘처리하는 방법??????
+				let response = await fetch("http://localhost:8080/board/"+id, {
+					method: "delete"
+				}); // 약속 - 어음 (10초)
+				
+				// 2.코드
+				let parseResponse = await response.text();
+				console.log(parseResponse);
+				
+				alert("삭제 성공");
+				location.href="/";
+				// 3.코드
+			}
+			
+			
+		</script>
 		
 	<br /><br />
 	<div>
