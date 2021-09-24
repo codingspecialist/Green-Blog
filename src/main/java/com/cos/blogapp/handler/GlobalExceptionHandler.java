@@ -24,9 +24,9 @@ public class GlobalExceptionHandler {
 		return Script.href("/", e.getMessage());
 	}
 	
-	@ExceptionHandler(value = MyAsyncNotFoundException.class)
-	public @ResponseBody CMRespDto<String> error2(MyAsyncNotFoundException e) {
-		System.out.println("오류 터졌어 : "+e.getMessage());
-		return new CMRespDto<String>(-1, e.getMessage(), null);
-	}
+@ExceptionHandler(value = MyAsyncNotFoundException.class)
+public @ResponseBody CMRespDto<String> error2(MyAsyncNotFoundException e) {
+	System.out.println("오류 터졌어 : "+e.getMessage());
+	return new CMRespDto<String>(-1, e.getMessage(), null);
+}
 }

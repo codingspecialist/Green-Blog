@@ -38,31 +38,30 @@ public class BoardController {
 	private final BoardRepository boardRepository;
 	private final HttpSession session;
 	
-	@DeleteMapping("/board/{id}")
-	public @ResponseBody CMRespDto<String> deleteById(@PathVariable int id) {
-		
-		// 인증이 된 사람만 함수 접근 가능!! (로그인 된 사람)
-		User principal = (User) session.getAttribute("principal");
-		if(principal == null) {
-			throw new MyAsyncNotFoundException("인증이 되지 않았습니다.");
-		}
-		
-		// 권한이 있는 사람만 함수 접근 가능(principal.id == {id})
-		Board boardEntity = boardRepository.findById(id)
-			.orElseThrow(()-> new MyAsyncNotFoundException("해당글을 찾을 수 없습니다."));
-		if(principal.getId() != boardEntity.getUser().getId()) {
-			throw new MyAsyncNotFoundException("해당글을 삭제할 권한이 없습니다.");
-		}
-		
-		try {
-			boardRepository.deleteById(id); // 오류 발생??? (id가 없으면) 
-		} catch (Exception e) {
-			throw new MyAsyncNotFoundException(id+"를 찾을 수 없어서 삭제할 수 없어요.");
-		}
-		
-		
-		return new CMRespDto<String>(1, "성공", null); // @ResponseBody 데이터 리턴!! String
+@DeleteMapping("/board/{id}")
+public @ResponseBody CMRespDto<String> deleteById(@PathVariable int id) {
+	
+	// 인증이 된 사람만 함수 접근 가능!! (로그인 된 사람)
+	User principal = (User) session.getAttribute("principal");
+	if(principal == null) {
+		throw new MyAsyncNotFoundException("인증이 되지 않았습니다.");
 	}
+	
+	// 권한이 있는 사람만 함수 접근 가능(principal.id == {id})
+	Board boardEntity = boardRepository.findById(id)
+		.orElseThrow(()-> new MyAsyncNotFoundException("해당글을 찾을 수 없습니다."));
+	if(principal.getId() != boardEntity.getUser().getId()) {
+		throw new MyAsyncNotFoundException("해당글을 삭제할 권한이 없습니다.");
+	}
+	
+	try {
+		boardRepository.deleteById(id); // 오류 발생??? (id가 없으면) 
+	} catch (Exception e) {
+		throw new MyAsyncNotFoundException(id+"를 찾을 수 없어서 삭제할 수 없어요.");
+	}
+	
+	return new CMRespDto<String>(1, "성공", null); // @ResponseBody 데이터 리턴!! String
+}
 	
 	// 쿼리스트링, 패스var => 디비 where 에 걸리는 친구들!!
 	// 1. 컨트롤러 선정, 2. Http Method 선정, 3. 받을 데이터가 있는지!! (body, 쿼리스트링, 패스var)

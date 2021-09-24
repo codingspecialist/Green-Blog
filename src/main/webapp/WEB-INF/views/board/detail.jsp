@@ -4,8 +4,10 @@
 
 <div class="container">
 		<!-- 내 글이면 (권한이 있으면) 수정과 삭제 버튼 보이게  if사용가능 -->
-		<a href="#" class="btn btn-warning">수정</a>
-		<button class="btn btn-danger" onclick="deleteById(${boardEntity.id})">삭제</button>
+		<c:if test="${sessionScope.principal.id == boardEntity.user.id}">
+			<a href="#" class="btn btn-warning">수정</a>
+			<button class="btn btn-danger" onclick="deleteById(${boardEntity.id})">삭제</button>
+		</c:if>
 		
 		<script>
 			async function deleteById(id){
@@ -19,15 +21,13 @@
 				let parseResponse = await response.json();
 				console.log(parseResponse); 
 				
- 				if(parseResponse.code == 1){
+					if(parseResponse.code == 1){
 					alert("삭제 성공");
 					location.href="/";
 				}else{
 					alert(parseResponse.msg);
 					location.href="/";
 				}
-				
-			
 			}
 			
 			
