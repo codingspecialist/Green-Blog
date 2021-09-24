@@ -50,6 +50,7 @@ public @ResponseBody CMRespDto<String> deleteById(@PathVariable int id) {
 	// 권한이 있는 사람만 함수 접근 가능(principal.id == {id})
 	Board boardEntity = boardRepository.findById(id)
 		.orElseThrow(()-> new MyAsyncNotFoundException("해당글을 찾을 수 없습니다."));
+	
 	if(principal.getId() != boardEntity.getUser().getId()) {
 		throw new MyAsyncNotFoundException("해당글을 삭제할 권한이 없습니다.");
 	}
