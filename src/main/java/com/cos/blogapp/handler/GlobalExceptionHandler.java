@@ -17,16 +17,16 @@ public class GlobalExceptionHandler {
 	// 어떤 익셉션은 데이터~~~
 	// 어떤 익셉션은 뒤로 가기
 	// 어떤 익셉션은 / 메인 페이지로 가게!!
-	
+
 	@ExceptionHandler(value = MyNotFoundException.class)
 	public @ResponseBody String error1(MyNotFoundException e) {
-		System.out.println("오류 터졌어 : "+e.getMessage());
+		System.out.println("오류 터졌어 : " + e.getMessage());
 		return Script.href("/", e.getMessage());
 	}
-	
-@ExceptionHandler(value = MyAsyncNotFoundException.class)
-public @ResponseBody CMRespDto<String> error2(MyAsyncNotFoundException e) {
-	System.out.println("오류 터졌어 : "+e.getMessage());
-	return new CMRespDto<String>(-1, e.getMessage(), null);
-}
+
+	@ExceptionHandler(value = MyAsyncNotFoundException.class)
+	public @ResponseBody CMRespDto<String> error2(MyAsyncNotFoundException e) {
+		System.out.println("오류 터졌어 : " + e.getMessage());
+		return new CMRespDto<String>(-1, e.getMessage(), null);
+	}
 }
