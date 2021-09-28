@@ -41,36 +41,53 @@ public class BoardController {
 	private final HttpSession session;
 
 	@PutMapping("/board/{id}")
-	public @ResponseBody CMRespDto<String> update(@PathVariable int id,  @RequestBody @Valid BoardSaveReqDto dto, BindingResult bindingResult) {
-		
+	public @ResponseBody CMRespDto<String> update(@PathVariable int id, @RequestBody @Valid BoardSaveReqDto dto,
+			BindingResult bindingResult) {
+
+		// 유효성 검사
+		// 인증 체크 (공통로직)
+
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errorMap = new HashMap<>();
+			for (FieldError error : bindingResult.getFieldErrors()) {
+				errorMap.put(error.getField(), error.getDefaultMessage());
+			}
+			throw new MyAsyncNotFoundException(errorMap.toString());
+		}
+
 		// 인증
+		User principal = (User) session.getAttribute("principal");
+		if (principal == null) { // 로그인 안됨
+			throw new MyAsyncNotFoundException("인증이 되지 않았습니다");
+		}
 		
 		// 권한
+		Board boardEntity = boardRepository.findById(id)
+				.orElseThrow(()-> new MyAsyncNotFoundException("해당 게시글을 찾을 수 없습니다."));
 		
-		// 유효성 검사
-		
-		User principal = (User) session.getAttribute("principal");
-		
+		if(principal.getId() != boardEntity.getUser().getId()) {
+			throw new MyAsyncNotFoundException("해당 게시글의 주인이 아닙니다.");
+		}
+
 		Board board = dto.toEntity(principal);
 		board.setId(id); // update의 핵심
-		
+
 		boardRepository.save(board);
-		
+
 		return new CMRespDto<>(1, "업데이트 성공", null);
 	}
-	
+
 	@GetMapping("/board/{id}/updateForm")
 	public String boardUpdateForm(@PathVariable int id, Model model) {
 		// 게시글 정보를 가지고 가야함.
-		Board boardEntity =  boardRepository.findById(id)
-				.orElseThrow(()-> new MyNotFoundException(id+"번호의 게시글을 찾을 수 없습니다."));
-		
+		Board boardEntity = boardRepository.findById(id)
+				.orElseThrow(() -> new MyNotFoundException(id + "번호의 게시글을 찾을 수 없습니다."));
+
 		model.addAttribute("boardEntity", boardEntity);
-		
+
 		return "board/updateForm";
 	}
-	
-	
+
 	// API(AJAX) 요청
 	@DeleteMapping("/board/{id}")
 	public @ResponseBody CMRespDto<String> deleteById(@PathVariable int id) {
@@ -120,7 +137,7 @@ public class BoardController {
 
 		User principal = (User) session.getAttribute("principal");
 
-		// 인증, 권한 체크 (공통로직)
+		// 인증 체크 (공통로직)
 		if (principal == null) { // 로그인 안됨
 			return Script.href("/loginForm", "잘못된 접근입니다");
 		}

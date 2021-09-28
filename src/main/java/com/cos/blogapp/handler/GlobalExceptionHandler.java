@@ -18,12 +18,14 @@ public class GlobalExceptionHandler {
 	// 어떤 익셉션은 뒤로 가기
 	// 어떤 익셉션은 / 메인 페이지로 가게!!
 
+	// 일반요청
 	@ExceptionHandler(value = MyNotFoundException.class)
 	public @ResponseBody String error1(MyNotFoundException e) {
 		System.out.println("오류 터졌어 : " + e.getMessage());
 		return Script.href("/", e.getMessage());
 	}
 
+	// fetch 요청 (데이터를 응답받아야 할 때)
 	@ExceptionHandler(value = MyAsyncNotFoundException.class)
 	public @ResponseBody CMRespDto<String> error2(MyAsyncNotFoundException e) {
 		System.out.println("오류 터졌어 : " + e.getMessage());
