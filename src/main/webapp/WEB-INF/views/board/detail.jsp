@@ -13,7 +13,7 @@
 	<script>
 			async function deleteById(id){
 				// 1. 비동기 함수 호출 -> 비동기를 잘처리하는 방법??????
-				let response = await fetch("http://localhost:8080/board/"+id, {
+				let response = await fetch("http://localhost:8080/api/board/"+id, {
 					method: "delete"
 				}); // 약속 - 어음 (10초)
 				
@@ -52,7 +52,7 @@
 	<div class="card">
 
 		<!-- 댓글 쓰기 시작 -->
-		<form action="/board/${boardEntity.id}/comment" method="post">
+		<form action="/api/board/${boardEntity.id}/comment" method="post">
 			<div class="card-body">
 				<textarea name="content" class="form-control" rows="1"  id="ta-content" ></textarea>
 			</div>
